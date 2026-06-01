@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DE collaboration — night &amp; day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --lime-500:#d1ff3b;
+    --lime-dim:#a9d12c;
+    --ui-0:#0c0f14;
+    --ui-50:#11151c;
+    --ui-100:#161b24;
+    --ui-200:#1d2531;
+    --ui-300:#27313f;
+    --ui-border:#2c3744;
+    --ui-500:#586577;
+    --ui-700:#8b97a6;
+    --ui-900:#c7cfd9;
+    --ui-1000:#eef2f6;
+    --blue:#5ea2ff;
+    --green:#5ad19a;
+    --red:#ff6b6b;
+    --yellow:#ffce4d;
+    --shadow:0 1px 2px rgba(8,18,38,.6), 0 8px 30px rgba(8,18,38,.45);
+    --radius:4px;
+    --mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans:'Inter', system-ui, -apple-system, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;background:var(--ui-0);color:var(--ui-1000);
+    font-family:var(--sans);font-size:16px;line-height:1.4;
+    overflow:hidden;-webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--lime-500);color:#0c0f14}
+
+  #progress{position:fixed;top:0;left:0;height:3px;background:var(--lime-500);width:0;z-index:50;transition:width .25s ease-out;box-shadow:0 0 8px var(--lime-500)}
+  #brandbar{position:fixed;top:14px;left:18px;z-index:40;display:flex;align-items:center;gap:10px;color:var(--ui-700);font-size:12px;letter-spacing:.02em}
+  #brandbar .mark{height:16px;color:var(--lime-500)}
+  #brandbar .stage{color:var(--ui-500)}
+  #counter{position:fixed;bottom:14px;right:18px;z-index:40;font-family:var(--mono);font-size:12px;color:var(--ui-500)}
+  #counter b{color:var(--ui-900)}
+  #hint{position:fixed;bottom:14px;left:18px;z-index:40;font-size:12px;color:var(--ui-500)}
+  #hint kbd{font-family:var(--mono);background:var(--ui-200);border:1px solid var(--ui-border);border-radius:3px;padding:1px 5px;color:var(--ui-900);font-size:11px}
+
+  .nav{position:fixed;top:50%;transform:translateY(-50%);z-index:40;background:var(--ui-100);border:1px solid var(--ui-border);color:var(--ui-700);
+    width:38px;height:38px;border-radius:var(--radius);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+  .nav:hover{background:var(--ui-200);color:var(--lime-500);border-color:var(--lime-dim)}
+  #prev{left:14px}#next{right:14px}
+
+  #deck{position:relative;height:100%;width:100%}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;
+    padding:74px 9vw 64px;opacity:0;transform:translateY(14px);transition:opacity .35s ease,transform .35s ease;overflow-y:auto}
+  .slide.active{display:flex;opacity:1;transform:none}
+  .slide.active .reveal{animation:rise .5s ease both}
+  .slide.active .reveal:nth-child(2){animation-delay:.06s}
+  .slide.active .reveal:nth-child(3){animation-delay:.12s}
+  .slide.active .reveal:nth-child(4){animation-delay:.18s}
+  .slide.active .reveal:nth-child(5){animation-delay:.24s}
+  .slide.active .reveal:nth-child(6){animation-delay:.30s}
+  @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.slide,.slide.active .reveal{transition:none;animation:none}}
+
+  h1{font-size:clamp(34px,6vw,76px);font-weight:700;letter-spacing:-.03em;margin:0;line-height:1.02}
+  h2{font-size:clamp(26px,3.6vw,46px);font-weight:600;letter-spacing:-.02em;margin:0 0 4px}
+  .kicker{font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--lime-500);margin-bottom:14px}
+  .lead{font-size:clamp(16px,1.8vw,21px);color:var(--ui-900);max-width:62ch;line-height:1.5}
+  .muted{color:var(--ui-700)}
+  .lime{color:var(--lime-500)}
+  .blue{color:var(--blue)}
+  .green{color:var(--green)}
+  .yellow{color:var(--yellow)}
+  code,.mono{font-family:var(--mono)}
+
+  .pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;padding:3px 9px;border-radius:999px;border:1px solid var(--ui-border);background:var(--ui-100);color:var(--ui-900)}
+  .pill.lime{border-color:var(--lime-dim);color:var(--lime-500)}
+  .pill.blue{border-color:#3f7fb0;color:#7fc0ff}
+  .pill.green{border-color:#2e7a59;color:var(--green)}
+  .pill.yellow{border-color:#8a6e20;color:var(--yellow)}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+
+  .term{background:#06080c;border:1px solid var(--ui-border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;font-family:var(--mono);font-size:14px}
+  .term .bar{display:flex;align-items:center;gap:7px;padding:9px 12px;background:var(--ui-100);border-bottom:1px solid var(--ui-border)}
+  .term .bar i{width:11px;height:11px;border-radius:50%;display:inline-block}
+  .dot-r{background:#ff5f57}.dot-y{background:#febc2e}.dot-g{background:#28c840}
+  .term .bar span{margin-left:6px;color:var(--ui-500);font-size:12px}
+  .term pre{margin:0;padding:14px 16px;color:var(--ui-900);white-space:pre-wrap;line-height:1.55}
+  .term .cmd{color:var(--lime-500)}
+  .term .c{color:var(--ui-500)}
+  .term .ok{color:var(--green)}.term .warn{color:var(--yellow)}.term .err{color:var(--red)}.term .b{color:var(--blue)}
+
+  .itemwrap{display:grid;grid-template-columns:1.1fr 1fr;gap:34px;align-items:center;width:100%;max-width:1180px;margin:0 auto}
+  @media (max-width:880px){.itemwrap{grid-template-columns:1fr;gap:18px}}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:30px;width:100%;max-width:1100px;margin:18px auto 0}
+  @media (max-width:880px){.cols{grid-template-columns:1fr}}
+  .cols3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;width:100%;max-width:1180px;margin:18px auto 0}
+  @media (max-width:880px){.cols3{grid-template-columns:1fr}}
+
+  ul.tick{list-style:none;padding:0;margin:0}
+  ul.tick li{padding:5px 0 5px 24px;position:relative;color:var(--ui-900);font-size:15px}
+  ul.tick li::before{content:"›";position:absolute;left:4px;color:var(--lime-500);font-weight:700}
+  ul.tick li.bad::before{content:"✗";color:var(--red)}
+  ul.tick li.good::before{content:"✓";color:var(--green)}
+
+  .card{border:1px solid var(--ui-border);border-radius:var(--radius);background:var(--ui-100);padding:18px 20px}
+  .card h3{margin:0 0 10px;font-size:15px;font-weight:600}
+  .card p{margin:0;color:var(--ui-900);font-size:14px;line-height:1.55}
+  .card .tag{font-family:var(--mono);font-size:11px;color:var(--ui-500);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em}
+
+  .divider-slide{align-items:flex-start}
+  .bignum{font-family:var(--mono);font-size:clamp(80px,16vw,200px);font-weight:700;color:var(--ui-200);line-height:.9;letter-spacing:-.04em}
+
+  .codebox{background:#06080c;border:1px solid var(--ui-border);border-radius:var(--radius);padding:14px 16px;font-family:var(--mono);font-size:13.5px;line-height:1.6}
+  .codebox .bad{color:var(--red)}
+  .codebox .good{color:var(--green)}
+  .codebox .dim{color:var(--ui-500)}
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:1100px;margin:18px auto 0}
+  @media (max-width:880px){.vs{grid-template-columns:1fr}}
+  .vs-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+  .vs-label.bad{color:var(--red)}.vs-label.good{color:var(--green)}
+
+  .badge{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--lime-500);color:#0c0f14;font-weight:700;font-size:13px;font-family:var(--mono);flex:none}
+  .steprow{display:flex;align-items:flex-start;gap:14px;padding:10px 0}
+  .steprow p{margin:0;color:var(--ui-900);font-size:14.5px;line-height:1.5}
+  .steprow strong{display:block;color:var(--ui-1000);margin-bottom:2px}
+
+  .note{background:rgba(209,255,59,.06);border:1px solid rgba(209,255,59,.2);border-radius:var(--radius);padding:10px 14px;font-size:13.5px;color:var(--ui-900);margin-top:14px}
+  .note .label{font-family:var(--mono);font-size:11px;color:var(--lime-500);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+
+  #menu{position:fixed;inset:0;background:rgba(6,8,12,.95);z-index:60;display:none;padding:60px 6vw;overflow-y:auto}
+  #menu.open{display:block}
+  #menu h2{margin-bottom:18px}
+  .menugrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+  .menugrid button{text-align:left;font-family:var(--mono);font-size:12.5px;padding:8px 11px;background:var(--ui-100);border:1px solid var(--ui-border);
+    color:var(--ui-900);border-radius:var(--radius);cursor:pointer;transition:all .12s}
+  .menugrid button:hover{border-color:var(--lime-500);color:var(--lime-500)}
+  .menugrid .sec{grid-column:1/-1;color:var(--lime-500);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-top:14px;border-bottom:1px solid var(--ui-border);padding-bottom:4px}
+
+  #picker{position:fixed;inset:0;background:rgba(6,8,12,.85);z-index:70;display:none;align-items:flex-start;justify-content:center;padding-top:16vh;backdrop-filter:blur(4px)}
+  #picker.open{display:flex}
+  #picker-box{background:var(--ui-100);border:1px solid var(--ui-border);border-radius:6px;width:min(560px,90vw);box-shadow:0 24px 60px rgba(0,0,0,.7);overflow:hidden}
+  #picker-input{width:100%;background:transparent;border:none;border-bottom:1px solid var(--ui-border);padding:14px 16px;font-family:var(--mono);font-size:14px;color:var(--ui-1000);outline:none}
+  #picker-input::placeholder{color:var(--ui-500)}
+  #picker-list{max-height:340px;overflow-y:auto}
+  #picker-list button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:transparent;border:none;padding:9px 16px;font-family:var(--mono);font-size:13px;color:var(--ui-900);cursor:pointer;transition:background .1s}
+  #picker-list button:hover,#picker-list button.active{background:var(--ui-200);color:var(--lime-500)}
+  #picker-list button .num{color:var(--ui-500);font-size:11px;min-width:22px}
+  #picker-empty{padding:14px 16px;font-family:var(--mono);font-size:13px;color:var(--ui-500)}
+
+  .moon{display:inline-block;animation:sway 4s ease-in-out infinite;transform-origin:center}
+  .sun{display:inline-block;animation:spin 12s linear infinite;transform-origin:center}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes sway{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(12deg)}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="brandbar">
+  <svg class="mark" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true" height="16"><g><rect width="19.44" height="100"></rect><polygon points="41.67 0 61.11 0 38.89 100 19.44 100 41.67 0"></polygon><polygon points="61.11 0 80.56 0 69.44 100 50 100 61.11 0"></polygon><rect x="80.56" width="19.44" height="100"></rect></g></svg>
+  <span>sesimi</span><span class="stage" id="stagelabel">· de collab</span>
+</div>
+<button class="nav" id="prev" aria-label="Previous">‹</button>
+<button class="nav" id="next" aria-label="Next">›</button>
+<div id="hint"><kbd>←</kbd> <kbd>→</kbd> move · <kbd>m</kbd> menu · <kbd>⌘S</kbd> jump · <kbd>f</kbd> fullscreen</div>
+<div id="counter"><b id="cur">1</b> / <span id="tot">0</span></div>
+
+<main id="deck"></main>
+<div id="menu"><h2>Jump to a slide</h2><div class="menugrid" id="menugrid"></div></div>
+<div id="picker">
+  <div id="picker-box">
+    <input id="picker-input" type="text" placeholder="Jump to slide…" autocomplete="off" spellcheck="false" />
+    <div id="picker-list"></div>
+    <div id="picker-empty" style="display:none">No slides match.</div>
+  </div>
+</div>
+
+<script>
+const SLIDES = [];
+
+// ── 1 · TITLE ──────────────────────────────────────────────────────────────
+SLIDES.push({section:'intro', menu:'Title', html:`
+  <div style="max-width:980px;margin:0 auto;text-align:center">
+    <div style="font-size:64px;margin-bottom:10px">
+      <span class="moon">🌙</span>&nbsp;&nbsp;<span class="sun">☀️</span>
+    </div>
+    <div class="kicker reveal">design engineer · night &amp; day</div>
+    <h1 class="reveal">better together</h1>
+    <p class="lead reveal" style="margin:18px auto 0">
+      A few things to align on — how we work, how we communicate,
+      and how we keep the quality bar high whether it's 9am or 2am.
+    </p>
+    <p class="muted reveal" style="margin-top:18px;font-size:14px">press <b class="lime">→</b> to begin</p>
+  </div>`});
+
+// ── 2 · SECTION: COMMUNICATION ─────────────────────────────────────────────
+SLIDES.push({section:'communication', menu:'§ Communication', html:`
+  <div class="divider-slide" style="max-width:900px;margin:0 auto">
+    <div class="bignum reveal">01</div>
+    <div class="kicker reveal">section</div>
+    <h1 class="reveal">Communication</h1>
+    <p class="lead muted reveal">How we stay in sync across timezones.</p>
+  </div>`});
+
+// ── 3 · DE CHANNEL ─────────────────────────────────────────────────────────
+SLIDES.push({section:'communication', menu:'#de-channel', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">slack</div>
+    <h2 class="reveal">#de — just us</h2>
+    <p class="lead reveal">A Filipino-only channel so everyone feels comfortable asking questions, flagging blockers, and speaking freely — without worrying about tone or language.</p>
+    <div class="cols" style="margin-top:28px">
+      <div>
+        <div class="card reveal">
+          <div class="tag">why it matters</div>
+          <p>Psychological safety lowers the barrier to asking questions. A question asked early is a bug caught early.</p>
+        </div>
+        <div class="card reveal" style="margin-top:12px">
+          <div class="tag">open question</div>
+          <h3>Is it counterintuitive?</h3>
+          <p>A separate DE channel might feel like we're splitting the team. What do you all think — does it help or does it create a silo? Let's discuss.</p>
+        </div>
+      </div>
+      <div>
+        <div class="card reveal">
+          <div class="tag">use it for</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>Quick clarifications before escalating</li>
+            <li>Sharing discoveries ("hey did you know…")</li>
+            <li>Blockers that need a second pair of eyes</li>
+            <li>Venting — it's a safe space</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>`});
+
+// ── 4 · SECTION: PRACTICES ─────────────────────────────────────────────────
+SLIDES.push({section:'practices', menu:'§ Practices', html:`
+  <div class="divider-slide" style="max-width:900px;margin:0 auto">
+    <div class="bignum reveal">02</div>
+    <div class="kicker reveal">section</div>
+    <h1 class="reveal">Practices</h1>
+    <p class="lead muted reveal">The small standards that keep the codebase consistent.</p>
+  </div>`});
+
+// ── 5 · LINTING ────────────────────────────────────────────────────────────
+SLIDES.push({section:'practices', menu:'Linting', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">code quality</div>
+    <h2 class="reveal">Always lint before you're done.</h2>
+    <p class="lead reveal">Lint errors block users from committing. If you ship a template with lint errors, you're shipping a template that can't be committed to.</p>
+    <div class="cols" style="margin-top:24px">
+      <div>
+        <div class="term reveal">
+          <div class="bar"><i class="dot-r"></i><i class="dot-y"></i><i class="dot-g"></i><span>terminal</span></div>
+          <pre><span class="cmd">$ nx lint &lt;template-name&gt;</span>
+<span class="ok">✓ All files pass linting</span>
+
+<span class="c"># or from within the template dir</span>
+<span class="cmd">$ npx eslint src/</span></pre>
+        </div>
+      </div>
+      <div>
+        <div class="card reveal">
+          <div class="tag">the rule</div>
+          <p>Lint every template when you wrap up. Not "before the PR" — <strong>before you stop working on it</strong>. Treat a lint error like a failing build.</p>
+        </div>
+        <div class="note reveal" style="margin-top:12px">
+          <div class="label">heads up</div>
+          Lint errors are enforced by the commit hook — so if you skip it, the next person's commit will fail on your code. Don't make it their problem.
+        </div>
+      </div>
+    </div>
+  </div>`});
+
+// ── 6 · STATIC CLASSNAMES ──────────────────────────────────────────────────
+SLIDES.push({section:'practices', menu:'Static classnames', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">code style</div>
+    <h2 class="reveal">Write static classnames.</h2>
+    <p class="lead reveal">Template literals add noise to diffs and add zero value when the string is static. Keep it clean.</p>
+    <div class="vs reveal" style="margin-top:28px">
+      <div>
+        <div class="vs-label bad">✗ don't</div>
+        <div class="codebox">
+          <span class="bad">className={&#96;flex items-center gap-2&#96;}</span>
+        </div>
+        <div class="note" style="margin-top:10px">
+          <div class="label">why it's wrong</div>
+          Template literals are for interpolation. No interpolation → no point. It bloats the diff and flags in lint rules.
+        </div>
+      </div>
+      <div>
+        <div class="vs-label good">✓ do</div>
+        <div class="codebox">
+          <span class="good">className="flex items-center gap-2"</span>
+        </div>
+        <div class="note" style="margin-top:10px">
+          <div class="label">why it matters</div>
+          Cleaner diffs. Consistent codebase. Don't settle for "it works" — settle for "it's right".
+        </div>
+      </div>
+    </div>
+    <p class="muted reveal" style="margin-top:22px;font-size:14px">Small things compound. A template with 40 layout files, each with 20 sloppy class strings, is a mess to review and maintain.</p>
+  </div>`});
+
+// ── 7 · COMMIT MESSAGE SKILL ───────────────────────────────────────────────
+SLIDES.push({section:'practices', menu:'Claude commit messages', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">tooling · from warlon</div>
+    <h2 class="reveal">Let Claude write your commit messages.</h2>
+    <p class="lead reveal">Warlon shared a Claude skill that generates clear, descriptive commit messages from your staged diff — so you stop writing <code class="lime">"fix"</code> and <code class="lime">"wip"</code>.</p>
+    <div class="cols" style="margin-top:24px">
+      <div class="term reveal">
+        <div class="bar"><i class="dot-r"></i><i class="dot-y"></i><i class="dot-g"></i><span>claude code</span></div>
+        <pre><span class="cmd">$ git add -p</span>
+<span class="c"># stage your changes, then:</span>
+<span class="cmd">$ /commit</span>
+<span class="b">→ reading staged diff…</span>
+<span class="ok">✓ "fix(layout3): correct logo variant for dark bg"</span>
+<span class="c">approve? [y/n]</span></pre>
+      </div>
+      <div>
+        <div class="card reveal">
+          <div class="tag">why bother</div>
+          <p>A good commit message is documentation. Future-you — or nightshift after you — will read <code>"fix logo variant on dark bg"</code> and understand instantly. <code>"fix"</code> tells nobody anything.</p>
+        </div>
+        <div class="card reveal" style="margin-top:12px">
+          <div class="tag">the standard</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>Describe <em>what</em> changed and <em>why</em></li>
+            <li>Use conventional commits: <code class="lime">fix:</code> <code class="lime">feat:</code> <code class="lime">chore:</code></li>
+            <li>Reference the ticket if relevant</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>`});
+
+// ── 8 · SECTION: TOOLS ─────────────────────────────────────────────────────
+SLIDES.push({section:'tools', menu:'§ Tools', html:`
+  <div class="divider-slide" style="max-width:900px;margin:0 auto">
+    <div class="bignum reveal">03</div>
+    <div class="kicker reveal">section</div>
+    <h1 class="reveal">Tools</h1>
+    <p class="lead muted reveal">Things that'll make your day easier if you know how to use them.</p>
+  </div>`});
+
+// ── 9 · DATABLOCK VALUES ───────────────────────────────────────────────────
+SLIDES.push({section:'tools', menu:'Testing datablock values', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">local dev</div>
+    <h2 class="reveal">How to test datablock values locally.</h2>
+    <p class="lead reveal">You don't need to wait for a deployed template to test datablock data — grab it straight from the network tab.</p>
+    <div style="margin-top:24px">
+      <div class="steprow reveal">
+        <div class="badge">1</div>
+        <div><p><strong>Go to the Datablock page in the Sesimi app</strong>Find the datablock you want to test against.</p></div>
+      </div>
+      <div class="steprow reveal">
+        <div class="badge">2</div>
+        <div><p><strong>Open DevTools → Network tab</strong>Filter by <code class="lime">datasets</code> and look for the relevant request.</p></div>
+      </div>
+      <div class="steprow reveal">
+        <div class="badge">3</div>
+        <div><p><strong>Copy the response payload</strong>This is the real datablock JSON. Paste it into your local <code class="lime">data/values.ts</code> or the mock JSON file.</p></div>
+      </div>
+      <div class="note reveal">
+        <div class="label">coming soon</div>
+        There's a ticket in progress that will let you <strong>export the JSON representation of a datablock directly</strong> — no more network tab spelunking. Watch for that release: <a href="https://linear.app/sesimi/issue/INT-800/importexport-datablocks-as-json" target="_blank">INT-800</a>.
+      </div>
+    </div>
+  </div>`});
+
+// ── 10 · STORYBOOK ─────────────────────────────────────────────────────────
+SLIDES.push({section:'tools', menu:'Storybook', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">development tool</div>
+    <h2 class="reveal">Storybook — see how your components behave in any brand.</h2>
+    <p class="lead reveal">Storybook renders every component and prop combination in isolation — no serving the template, no navigating the editor, no guesswork.</p>
+    <div class="cols" style="margin-top:24px">
+      <div>
+        <div class="term reveal">
+          <div class="bar"><i class="dot-r"></i><i class="dot-y"></i><i class="dot-g"></i><span>setup</span></div>
+          <pre><span class="cmd">$ cd apps/templates/&lt;brand&gt;/&lt;template&gt;</span>
+<span class="cmd">$ npx storybook init</span>
+<span class="c"># or if already configured:</span>
+<span class="cmd">$ nx storybook &lt;template-name&gt;</span>
+<span class="ok">✓ Storybook running at localhost:6006</span></pre>
+        </div>
+      </div>
+      <div>
+        <div class="card reveal">
+          <div class="tag">what you get</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>See exactly how components render under a brand's tokens — colours, fonts, spacing — before the template is served</li>
+            <li>Skip serving the template just to understand how the code behaves</li>
+            <li>A living visual reference: every component, every prop, every story in one place</li>
+          </ul>
+        </div>
+        <div class="note reveal" style="margin-top:12px">
+          <div class="label">live example</div>
+          <a href="https://components-storybook-one.vercel.app/?path=/story/components-button--primary&globals=viewport:Fullscreen" target="_blank" style="color:var(--lime-500);font-family:var(--mono);font-size:13px;word-break:break-all">components-storybook-one.vercel.app</a>
+        </div>
+      </div>
+    </div>
+  </div>`});
+
+// ── 11 · GALAXY SNIPPETS ───────────────────────────────────────────────────
+SLIDES.push({section:'tools', menu:'Galaxy snippets', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">vs code extension · sesimi</div>
+    <h2 class="reveal">Galaxy Snippets — stop rewriting the same code.</h2>
+    <p class="lead reveal">Our team built a small VS Code extension so we never have to hand-type boilerplate again. Start typing <code class="lime">glx</code> and every snippet surfaces instantly.</p>
+    <div class="cols" style="margin-top:24px">
+      <div>
+        <!-- VS Code autocomplete mockup -->
+        <div class="reveal" style="background:#1e1e2e;border:1px solid var(--ui-border);border-radius:6px;overflow:hidden;font-family:var(--mono);font-size:13px;box-shadow:var(--shadow)">
+          <div style="background:#13131f;border-bottom:1px solid var(--ui-border);padding:7px 12px;color:var(--ui-500);font-size:11px;display:flex;align-items:center;gap:8px">
+            <span style="color:#c792ea">Layout.tsx</span>
+            <span style="margin-left:auto;color:var(--ui-500)">TypeScript React</span>
+          </div>
+          <div style="padding:12px 16px;color:var(--ui-700);line-height:1.7">
+            <span style="color:var(--ui-500)">1 </span><span style="color:#c792ea">const</span> <span style="color:#82aaff">Layout</span> <span style="color:var(--ui-700)">=</span> <span style="color:#89ddff">()</span> <span style="color:#c792ea">=&gt;</span> <span style="color:#89ddff">{</span><br>
+            <span style="color:var(--ui-500)">2 </span>&nbsp;&nbsp;<span style="color:#c792ea">const</span> preset <span style="color:#89ddff">=</span> <span style="color:#82aaff">glx</span><span style="background:rgba(209,255,59,.15);color:var(--lime-500);border-radius:2px;padding:0 2px">|</span>
+          </div>
+          <!-- Autocomplete dropdown -->
+          <div style="border-top:1px solid var(--ui-border);background:#252537">
+            <div style="background:rgba(94,162,255,.15);border-left:2px solid var(--blue);padding:6px 12px;display:flex;align-items:center;gap:10px">
+              <span style="background:#3f7fb0;color:#fff;font-size:10px;padding:1px 5px;border-radius:3px;font-weight:600">ƒ</span>
+              <span style="color:var(--ui-1000)">glxActivePreset</span>
+              <span style="margin-left:auto;color:var(--ui-500);font-size:12px">Function to determine the active preset based on aspect ratio</span>
+            </div>
+            <div style="padding:6px 12px;display:flex;align-items:center;gap:10px;border-left:2px solid transparent">
+              <span style="background:#2e7a59;color:#fff;font-size:10px;padding:1px 5px;border-radius:3px;font-weight:600">⬡</span>
+              <span style="color:var(--ui-900)">glxComponent</span>
+              <span style="margin-left:auto;color:var(--ui-500);font-size:12px">Minimal React component with cn utility</span>
+            </div>
+            <div style="padding:6px 12px;display:flex;align-items:center;gap:10px;border-left:2px solid transparent">
+              <span style="background:#5a3a8a;color:#fff;font-size:10px;padding:1px 5px;border-radius:3px;font-weight:600">⬡</span>
+              <span style="color:var(--ui-900)">glxContext</span>
+              <span style="margin-left:auto;color:var(--ui-500);font-size:12px">Galaxy Page Context Hook with dev environment check</span>
+            </div>
+            <div style="padding:6px 12px;display:flex;align-items:center;gap:10px;border-left:2px solid transparent">
+              <span style="background:#5a3a8a;color:#fff;font-size:10px;padding:1px 5px;border-radius:3px;font-weight:600">⬡</span>
+              <span style="color:var(--ui-900)">glxHook</span>
+              <span style="margin-left:auto;color:var(--ui-500);font-size:12px">Galaxy Template Hook Boilerplate</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="card reveal">
+          <div class="tag">what's in the box</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>Reusable component with <code class="lime">cn</code> className prop — wired up and ready</li>
+            <li>Active preset from aspect ratio — no more copy-pasting that logic</li>
+            <li>Galaxy Page Context Hook with dev environment guard</li>
+            <li>Template Hook boilerplate</li>
+          </ul>
+        </div>
+        <div class="note reveal">
+          <div class="label">open to contributions</div>
+          The repo is shared — if you write something you'd use twice, add it and the whole team benefits. Drop a message in <code class="lime">#de</code> when you push one.
+        </div>
+      </div>
+    </div>
+  </div>`});
+
+// ── 12 · SHEETS ────────────────────────────────────────────────────────────
+SLIDES.push({section:'tools', menu:'Sharper in Sheets', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">na team · datablocks</div>
+    <h2 class="reveal">Sharper in Sheets — keeping data clean at the source.</h2>
+    <p class="lead reveal">Now that datablocks connect directly to Sheets, the NA team is training to be well-versed in Sheets — because bad data input from AEs, ACs, or clients makes templates buggy. We fix that before it gets in.</p>
+    <div class="cols3" style="margin-top:24px">
+      <div class="card reveal">
+        <div class="tag">auto-increment order column</div>
+        <h3>Order column</h3>
+        <p>We add an auto-incrementing order column to every datablock sheet. It controls how options are sorted in the template — and keeps humans from breaking that order manually.</p>
+      </div>
+      <div class="card reveal">
+        <div class="tag">data validation</div>
+        <h3>Only valid data gets in</h3>
+        <p>Cells are restricted to allowed values via Data validation. If an AE types something the template doesn't recognise, the sheet rejects it — not the template at runtime.</p>
+      </div>
+      <div class="card reveal">
+        <div class="tag">protected ranges</div>
+        <h3>Permission per column</h3>
+        <p>Columns like <code class="lime">order</code> and <code class="lime">tags</code> are locked to design engineers only. AEs and clients can edit their data — not the structure the template depends on.</p>
+      </div>
+    </div>
+    <div class="note reveal" style="margin-top:16px;max-width:1100px">
+      <div class="label">additional note</div>
+      Formulas and conditional formatting — for derived values, visual cues on invalid entries, and anything that saves a human from doing something a cell can do for them.
+    </div>
+  </div>`});
+
+// ── 13 · SECTION: TRACKING ─────────────────────────────────────────────────
+SLIDES.push({section:'tracking', menu:'§ Tracking & visibility', html:`
+  <div class="divider-slide" style="max-width:900px;margin:0 auto">
+    <div class="bignum reveal">04</div>
+    <div class="kicker reveal">section</div>
+    <h1 class="reveal">Tracking &amp;<br>Visibility</h1>
+    <p class="lead muted reveal">How we know what's done, what's in flight, and what's overdue.</p>
+  </div>`});
+
+// ── 14 · FEATURE TRACKER ───────────────────────────────────────────────────
+SLIDES.push({section:'tracking', menu:'Feature tracker', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">slack · visibility</div>
+    <h2 class="reveal">Feature / Bug card tracker.</h2>
+    <p class="lead reveal">We built a list in Slack that tracks every feature and bug we care about — grouped by status, linked to Linear. Any time someone updates it, an alert fires so the whole team stays in the loop.</p>
+    <div class="cols" style="margin-top:24px">
+      <div>
+        <div class="card reveal">
+          <div class="tag">how it's organised</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>Grouped by status — Triage, Ideas &amp; Bugs, Prioritised, In Progress, Peer Review, Done</li>
+            <li>Each item links directly to its Linear card</li>
+            <li>Status badge updates in the list as the card moves through the workflow</li>
+          </ul>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="card reveal">
+          <div class="tag">who contributes</div>
+          <p>Anyone with context. DEs, account coordinators, execs, our graphic designer — if you spot a bug or have a feature idea, add it. The more eyes on this the better the product gets.</p>
+        </div>
+        <div class="note reveal">
+          <div class="label">how it works</div>
+          Updates to the list trigger a Slack alert — so no one has to check manually. If something moved, you'll know.
+        </div>
+      </div>
+    </div>
+  </div>`});
+
+// ── 15 · ESTIMATES ─────────────────────────────────────────────────────────
+SLIDES.push({section:'tracking', menu:'Estimates', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">planning</div>
+    <h2 class="reveal">Estimates.</h2>
+    <p class="lead reveal">Add time estimates to your Linear cards. They don't have to be perfect — they have to exist. A rough estimate is infinitely better than no estimate.</p>
+    <div class="cols" style="margin-top:24px">
+      <div>
+        <div class="card reveal">
+          <div class="tag">why</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>Gives the team a sense of scope before picking up a card</li>
+            <li>Helps identify cards that are blocked or stalled</li>
+            <li>Feeds into sprint planning and capacity</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="card reveal">
+          <div class="tag">how</div>
+          <p>Use story points or hours — whichever the team agrees on. Add the estimate when you start the card, update it if reality diverges. Log actual time if you can.</p>
+        </div>
+        <div class="note reveal" style="margin-top:12px">
+          <div class="label">remember</div>
+          An estimate you updated is honest. An estimate you never added is a gap in visibility for everyone.
+        </div>
+      </div>
+    </div>
+  </div>`});
+
+// ── 16 · COMPLETION RATE / LINEAR INSIGHTS ─────────────────────────────────
+/* HIDDEN – uncomment to restore
+SLIDES.push({section:'tracking', menu:'Completion rate & Linear Insights', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">visibility</div>
+    <h2 class="reveal">Tracking completion rate.</h2>
+    <p class="lead reveal">As templates get assigned to ACs and AEs — not just DEs — how do we track the overall completion rate? This is an open question worth discussing.</p>
+    <div class="cols" style="margin-top:24px">
+      <div>
+        <div class="card reveal">
+          <div class="tag">the challenge</div>
+          <p>If cards move to ACs and AEs, DE-owned metrics won't capture the full picture. We risk losing visibility into throughput, blockers, and team load.</p>
+        </div>
+        <div class="card reveal" style="margin-top:12px">
+          <div class="tag">one option: Linear Insights</div>
+          <p>Linear's Insights tab can show cycle time, lead time, and throughput across assignees. Worth exploring whether it gives us the cross-team view we need.</p>
+        </div>
+      </div>
+      <div>
+        <div class="card reveal">
+          <div class="tag">open questions</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>What metric do we actually care about — cards done, layouts shipped, time-to-review?</li>
+            <li>Does Linear Insights cover multi-assignee cards?</li>
+            <li>Do we need a separate sheet, or can Linear do the job?</li>
+          </ul>
+        </div>
+        <div class="note reveal" style="margin-top:12px">
+          <div class="label">action</div>
+          Let's agree on the metric first, then find the tool — not the other way around.
+        </div>
+      </div>
+    </div>
+  </div>`});
+*/
+
+// ── 17 · SECTION: TEMPLATE CONVENTIONS ────────────────────────────────────
+SLIDES.push({section:'conventions', menu:'§ Template conventions', html:`
+  <div class="divider-slide" style="max-width:900px;margin:0 auto">
+    <div class="bignum reveal">05</div>
+    <div class="kicker reveal">section</div>
+    <h1 class="reveal">Template<br>Conventions</h1>
+    <p class="lead muted reveal">Standards that keep templates readable across the whole team.</p>
+  </div>`});
+
+// ── 18 · LAYOUT NAMING CONVENTIONS ────────────────────────────────────────
+SLIDES.push({section:'conventions', menu:'Layout naming conventions', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">conventions</div>
+    <h2 class="reveal">Layout naming conventions.</h2>
+    <p class="lead reveal">We stopped using ad industry shorthand for file names. No one should have to remember what <code class="lime">dmrec</code> or <code class="lime">mrec</code> means — the file name should just tell you.</p>
+    <div class="cols" style="margin-top:24px">
+      <div>
+        <div class="vs reveal" style="margin-top:0">
+          <div>
+            <div class="vs-label bad">before</div>
+            <div class="codebox"><pre style="margin:0;white-space:pre">src/layouts/
+├─ <span class="bad">Dmrec.tsx</span>
+├─ <span class="bad">Mrec.tsx</span>
+└─ <span class="bad">Skyscraper.tsx</span></pre></div>
+          </div>
+          <div>
+            <div class="vs-label good">after</div>
+            <div class="codebox"><pre style="margin:0;white-space:pre">src/layouts/
+├─ <span class="good">Layout300x600.tsx</span>
+├─ <span class="good">Layout300x250.tsx</span>
+└─ <span class="good">Layout160x600.tsx</span></pre></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="card reveal">
+          <div class="tag">why we made the switch</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>No more second-guessing — <code class="lime">mrec</code> is <em>what</em> exactly? The dimension says it all</li>
+            <li>New DEs shouldn't need to memorise a glossary of ad size nicknames just to read a file tree</li>
+            <li>Dimensions are universal — shorthand is team-specific tribal knowledge</li>
+          </ul>
+        </div>
+        <div class="note reveal">
+          <div class="label">the rule</div>
+          Name the file after what it renders, not what the industry calls it. <code class="lime">Layout300x250.tsx</code> is always unambiguous.
+        </div>
+      </div>
+    </div>
+  </div>`});
+
+// ── 19 · LAYOUT INSTRUCTIONS ───────────────────────────────────────────────
+SLIDES.push({section:'conventions', menu:'Layout instructions', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">conventions</div>
+    <h2 class="reveal">From brief to layouts — automated.</h2>
+    <p class="lead reveal">We use two instruction files that work together. Dayshift's <code class="lime">template.instructions.md</code> fetches the Linear card and generates the template. Our <code class="lime">screens.instructions.md</code> picks up from there and creates all the layout files.</p>
+    <div class="cols" style="margin-top:24px">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="card reveal">
+          <div class="tag">template.instructions.md · dayshift</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>Fetches all the Linear card details for the template</li>
+            <li>Generates the initial template scaffold from the brief</li>
+            <li>The starting point for any new template build</li>
+          </ul>
+        </div>
+        <div class="card reveal">
+          <div class="tag">screens.instructions.md · na team</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>We created this to take the scaffold further</li>
+            <li>Generates all the layout files the template requires</li>
+            <li>Works in conjunction with the template instructions — run it after</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="note reveal">
+          <div class="label">how it fits together</div>
+          <div style="font-size:14px;line-height:1.8;font-family:var(--mono);margin-top:4px">
+            <span style="color:var(--ui-500)">1.</span> <span style="color:var(--blue)">template.instructions.md</span><br>
+            &nbsp;&nbsp;&nbsp;<span style="color:var(--ui-500)">↳ reads Linear card, scaffolds template</span><br>
+            <span style="color:var(--ui-500)">2.</span> <span style="color:var(--lime-500)">screens.instructions.md</span><br>
+            &nbsp;&nbsp;&nbsp;<span style="color:var(--ui-500)">↳ generates all layout files</span><br>
+            <span style="color:var(--ui-500)">3.</span> <span style="color:var(--green)">build</span>
+          </div>
+        </div>
+        <div class="note reveal" style="margin-top:12px">
+          <div class="label">why this matters</div>
+          Less manual scaffolding means fewer structural inconsistencies across templates — and less time spent on the parts that should be automatic.
+        </div>
+      </div>
+    </div>
+  </div>`});
+
+// ── 20 · DB PRESETS WITH SAME LAYOUTS ─────────────────────────────────────
+SLIDES.push({section:'conventions', menu:'DB presets with same layouts', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">architecture</div>
+    <h2 class="reveal">Presets sharing the same layout.</h2>
+    <p class="lead reveal">When two sizes have identical visual structure, they can share a layout file instead of duplicating it. Know when to use this pattern — and when not to.</p>
+    <div class="cols" style="margin-top:24px">
+      <div>
+        <div class="codebox reveal" style="font-size:12.5px"><span class="dim">// sizes.ts</span>
+export const sizes = isSquare
+  ? <span class="good">'layout1/Square'</span>
+  : isLandscape
+  ? <span class="good">'layout1/Landscape'</span>
+  : <span class="good">'layout1/Square'</span>;
+<span class="dim">// ↑ two presets, one layout file</span>
+        </div>
+      </div>
+      <div>
+        <div class="card reveal">
+          <div class="tag">when to share</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>The two sizes have the same aspect ratio</li>
+            <li>The visual structure is identical — only pixel count differs</li>
+            <li>No layout-specific conditional logic is needed</li>
+          </ul>
+        </div>
+        <div class="card reveal" style="margin-top:12px">
+          <div class="tag">when not to share</div>
+          <ul class="tick" style="margin-top:4px">
+            <li class="bad">The approved creatives show different compositions</li>
+            <li class="bad">One size needs a field the other doesn't</li>
+            <li class="bad">You'd need conditionals to handle the differences</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>`});
+
+// ── 21 · ARTIFACTS ─────────────────────────────────────────────────────────
+SLIDES.push({section:'conventions', menu:'Artifacts', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">conventions</div>
+    <h2 class="reveal">Artifacts.</h2>
+    <p class="lead reveal">Anything you produce that might be useful to someone else later — screenshots, exported JSONs, approved creative references — should be attached to the Linear card.</p>
+    <div class="cols" style="margin-top:24px">
+      <div>
+        <div class="card reveal">
+          <div class="tag">what counts as an artifact</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>Screenshots of the template at each size</li>
+            <li>The export URL from Nebula</li>
+            <li>The approved creative reference images</li>
+            <li>Exported datablock JSON for local testing</li>
+            <li>Storybook screenshots</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="card reveal">
+          <div class="tag">why attach them</div>
+          <p>If your work lives only in your local environment, it disappears when you stop. Artifacts on the card mean CS, AEs, and nightshift all have context without asking you.</p>
+        </div>
+        <div class="note reveal" style="margin-top:12px">
+          <div class="label">the habit</div>
+          Before you move a card to "CS Review", check: has everything CS needs been attached? Export URL, screenshots, any known issues.
+        </div>
+      </div>
+    </div>
+  </div>`});
+
+// ── 22 · SECTION: CULTURE ──────────────────────────────────────────────────
+SLIDES.push({section:'culture', menu:'§ Culture', html:`
+  <div class="divider-slide" style="max-width:900px;margin:0 auto">
+    <div class="bignum reveal">06</div>
+    <div class="kicker reveal">section</div>
+    <h1 class="reveal">Culture</h1>
+    <p class="lead muted reveal">The habits that separate a good team from a great one.</p>
+  </div>`});
+
+// ── 23 · RELEASE NOTES ────────────────────────────────────────────────────
+SLIDES.push({section:'culture', menu:'Read release notes', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">staying sharp</div>
+    <h2 class="reveal">Read the release notes.</h2>
+    <p class="lead reveal">Every release ships new things — new config options, changed APIs, new components, deprecations. If you don't read them, you'll write code for a version that no longer exists.</p>
+    <div class="cols" style="margin-top:24px">
+      <div>
+        <div class="card reveal">
+          <div class="tag">what to look for</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>New defineConfig fields or options</li>
+            <li>Changes to layout conventions</li>
+            <li>New template utilities or helpers</li>
+            <li>Deprecations — things that'll break next release</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="card reveal">
+          <div class="tag">the habit</div>
+          <p>When a new release lands, spend 5 minutes reading the notes. Not skimming — reading. If something changes how you'd write a template, share it in <code class="lime">#de</code>.</p>
+        </div>
+        <div class="note reveal" style="margin-top:12px">
+          <div class="label">practical tip</div>
+          Subscribe to the release channel so you get notified. Don't rely on someone else to surface it for you.
+        </div>
+      </div>
+    </div>
+  </div>`});
+
+// ── 24 · EAVESDROP ─────────────────────────────────────────────────────────
+SLIDES.push({section:'culture', menu:'Eavesdrop & subscribe', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">curiosity</div>
+    <h2 class="reveal">Eavesdrop. Join in.</h2>
+    <p class="lead reveal">You learn the most from conversations you weren't originally part of. Asking costs nothing — staying silent costs context.</p>
+    <div class="cols" style="margin-top:24px">
+      <div>
+        <div class="card reveal">
+          <div class="tag">join conversations</div>
+          <p>If you see a thread about a template pattern, a Linear ticket, or a CS review — jump in. You don't need an invitation. You might know something useful, or you might learn something.</p>
+        </div>
+        <div class="card reveal" style="margin-top:12px">
+          <div class="tag">subscribe to issues</div>
+          <p>In Linear: if a ticket interests you — even if it's not assigned to you — subscribe to it. You'll see the comments, the decisions, and the outcome. That's how you build domain knowledge fast.</p>
+        </div>
+      </div>
+      <div>
+        <div class="card reveal">
+          <div class="tag">asking costs nothing</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>"Why did we do it this way?" is always a valid question</li>
+            <li>"I haven't seen this pattern before — can you explain?" is always welcome</li>
+            <li>Curiosity is a sign of engagement, not ignorance</li>
+          </ul>
+        </div>
+        <div class="note reveal" style="margin-top:12px">
+          <div class="label">the mindset</div>
+          The best DEs know more than their own cards. They know what the team is building, why, and where the hard parts are. Get there by eavesdropping.
+        </div>
+      </div>
+    </div>
+  </div>`});
+
+// ── 25 · CLOSE ─────────────────────────────────────────────────────────────
+SLIDES.push({section:'close', menu:'Wrap up', html:`
+  <div style="max-width:980px;margin:0 auto;text-align:center">
+    <div style="font-size:56px;margin-bottom:10px">🤝</div>
+    <div class="kicker reveal">that's everything</div>
+    <h1 class="reveal">Ship good work,<br>leave good context.</h1>
+    <p class="lead reveal" style="margin:18px auto 0;max-width:54ch">
+      The nightshift / dayshift model only works if each team leaves the codebase,
+      the cards, and the documentation in a state the other can pick up without a handover call.
+    </p>
+    <div class="row reveal" style="justify-content:center;margin-top:28px">
+      <span class="pill lime">lint before wrapping up</span>
+      <span class="pill lime">update the tracker</span>
+      <span class="pill lime">attach artifacts to cards</span>
+      <span class="pill lime">ask in #de</span>
+    </div>
+    <p class="muted reveal" style="margin-top:28px;font-size:14px">Questions? Disagreements? Let's talk.</p>
+  </div>`});
+
+/* =========================================================================
+   RUNTIME
+   ========================================================================= */
+const deck  = document.getElementById('deck');
+const menu  = document.getElementById('menu');
+const grid  = document.getElementById('menugrid');
+const cur   = document.getElementById('cur');
+const tot   = document.getElementById('tot');
+const prog  = document.getElementById('progress');
+const stage = document.getElementById('stagelabel');
+
+let idx = 0;
+
+SLIDES.forEach((s, i) => {
+  const el = document.createElement('div');
+  el.className = 'slide';
+  el.dataset.idx = i;
+  el.innerHTML = s.html;
+  deck.appendChild(el);
+});
+
+let lastSec = null;
+SLIDES.forEach((s, i) => {
+  if (s.section !== lastSec) {
+    const sec = document.createElement('div');
+    sec.className = 'sec';
+    sec.textContent = s.section;
+    grid.appendChild(sec);
+    lastSec = s.section;
+  }
+  const btn = document.createElement('button');
+  btn.textContent = String(i + 1).padStart(2, '0') + '  ' + s.menu;
+  btn.onclick = () => { go(i); toggleMenu(false); };
+  grid.appendChild(btn);
+});
+
+tot.textContent = SLIDES.length;
+
+function go(n) {
+  const slides = deck.querySelectorAll('.slide');
+  slides[idx].classList.remove('active');
+  idx = Math.max(0, Math.min(n, SLIDES.length - 1));
+  slides[idx].classList.add('active');
+  cur.textContent = idx + 1;
+  prog.style.width = ((idx + 1) / SLIDES.length * 100) + '%';
+  stage.textContent = '· ' + SLIDES[idx].section;
+}
+
+function toggleMenu(force) {
+  const open = force === undefined ? !menu.classList.contains('open') : force;
+  menu.classList.toggle('open', open);
+}
+
+go(0);
+
+document.getElementById('prev').onclick = () => go(idx - 1);
+document.getElementById('next').onclick = () => go(idx + 1);
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(idx + 1);
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') go(idx - 1);
+  else if (e.key === 'm' || e.key === 'M') toggleMenu();
+  else if (e.key === 'f' || e.key === 'F') document.documentElement.requestFullscreen?.();
+  else if (e.key === 'Escape') { toggleMenu(false); togglePicker(false); }
+  else if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); togglePicker(); }
+});
+
+// ── Slide picker (⌘S) ────────────────────────────────────────────────────────
+const picker      = document.getElementById('picker');
+const pickerInput = document.getElementById('picker-input');
+const pickerList  = document.getElementById('picker-list');
+const pickerEmpty = document.getElementById('picker-empty');
+let pickerActive  = 0;
+
+function buildPickerItems(query) {
+  const q = query.trim().toLowerCase();
+  pickerList.innerHTML = '';
+  pickerActive = 0;
+  const matches = SLIDES.map((s, i) => ({ s, i })).filter(({ s }) =>
+    !q || s.menu.toLowerCase().includes(q)
+  );
+  pickerEmpty.style.display = matches.length ? 'none' : '';
+  matches.forEach(({ s, i }, rank) => {
+    const btn = document.createElement('button');
+    btn.innerHTML = `<span class="num">${String(i + 1).padStart(2, '0')}</span>${s.menu}`;
+    if (rank === 0) btn.classList.add('active');
+    btn.addEventListener('mousedown', ev => { ev.preventDefault(); go(i); togglePicker(false); });
+    pickerList.appendChild(btn);
+  });
+}
+
+function movePicker(dir) {
+  const items = pickerList.querySelectorAll('button');
+  if (!items.length) return;
+  items[pickerActive]?.classList.remove('active');
+  pickerActive = (pickerActive + dir + items.length) % items.length;
+  items[pickerActive]?.classList.add('active');
+  items[pickerActive]?.scrollIntoView({ block: 'nearest' });
+}
+
+function togglePicker(force) {
+  const open = force !== undefined ? force : !picker.classList.contains('open');
+  picker.classList.toggle('open', open);
+  if (open) {
+    pickerInput.value = '';
+    buildPickerItems('');
+    pickerInput.focus();
+  }
+}
+
+pickerInput.addEventListener('input', () => buildPickerItems(pickerInput.value));
+pickerInput.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown') { e.preventDefault(); movePicker(1); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); movePicker(-1); }
+  else if (e.key === 'Enter') {
+    const active = pickerList.querySelector('button.active');
+    if (active) active.dispatchEvent(new MouseEvent('mousedown'));
+  }
+  else if (e.key === 'Escape') togglePicker(false);
+});
+picker.addEventListener('mousedown', e => { if (e.target === picker) togglePicker(false); });
+</script>
+</body>
+</html>
