@@ -76,6 +76,8 @@
   .green{color:var(--green)}
   .yellow{color:var(--yellow)}
   code,.mono{font-family:var(--mono)}
+  a{color:var(--lime-500);text-decoration:none}
+  a:hover{text-decoration:underline}
 
   .pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;padding:3px 9px;border-radius:999px;border:1px solid var(--ui-border);background:var(--ui-100);color:var(--ui-900)}
   .pill.lime{border-color:var(--lime-dim);color:var(--lime-500)}
@@ -189,67 +191,26 @@ SLIDES.push({section:'intro', menu:'Title', html:`
     <div style="font-size:64px;margin-bottom:10px">
       <span class="moon">🌙</span>&nbsp;&nbsp;<span class="sun">☀️</span>
     </div>
-    <div class="kicker reveal">design engineer · night &amp; day</div>
-    <h1 class="reveal">better together</h1>
+    <div class="kicker reveal">design engineer · nar &amp; apac</div>
+    <h1 class="reveal">Two Regions,<br>One Direction</h1>
     <p class="lead reveal" style="margin:18px auto 0">
       A few things to align on — how we work, how we communicate,
-      and how we keep the quality bar high whether it's 9am or 2am.
+      and how we keep the quality bar high across every time zone.
     </p>
     <p class="muted reveal" style="margin-top:18px;font-size:14px">press <b class="lime">→</b> to begin</p>
   </div>`});
 
-// ── 2 · SECTION: COMMUNICATION ─────────────────────────────────────────────
-SLIDES.push({section:'communication', menu:'§ Communication', html:`
+// ── 2 · SECTION: HOW WE BUILD ──────────────────────────────────────────────
+SLIDES.push({section:'how we build', menu:'§ How We Build', html:`
   <div class="divider-slide" style="max-width:900px;margin:0 auto">
     <div class="bignum reveal">01</div>
     <div class="kicker reveal">section</div>
-    <h1 class="reveal">Communication</h1>
-    <p class="lead muted reveal">How we stay in sync across timezones.</p>
+    <h1 class="reveal">How We Build</h1>
+    <p class="lead muted reveal">Code standards and template conventions that keep the codebase consistent across both regions.</p>
   </div>`});
 
-// ── 3 · DE CHANNEL ─────────────────────────────────────────────────────────
-SLIDES.push({section:'communication', menu:'#de-channel', html:`
-  <div style="max-width:1060px;margin:0 auto">
-    <div class="kicker reveal">slack</div>
-    <h2 class="reveal">#de — just us</h2>
-    <p class="lead reveal">A Filipino-only channel so everyone feels comfortable asking questions, flagging blockers, and speaking freely — without worrying about tone or language.</p>
-    <div class="cols" style="margin-top:28px">
-      <div>
-        <div class="card reveal">
-          <div class="tag">why it matters</div>
-          <p>Psychological safety lowers the barrier to asking questions. A question asked early is a bug caught early.</p>
-        </div>
-        <div class="card reveal" style="margin-top:12px">
-          <div class="tag">open question</div>
-          <h3>Is it counterintuitive?</h3>
-          <p>A separate DE channel might feel like we're splitting the team. What do you all think — does it help or does it create a silo? Let's discuss.</p>
-        </div>
-      </div>
-      <div>
-        <div class="card reveal">
-          <div class="tag">use it for</div>
-          <ul class="tick" style="margin-top:4px">
-            <li>Quick clarifications before escalating</li>
-            <li>Sharing discoveries ("hey did you know…")</li>
-            <li>Blockers that need a second pair of eyes</li>
-            <li>Venting — it's a safe space</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>`});
-
-// ── 4 · SECTION: PRACTICES ─────────────────────────────────────────────────
-SLIDES.push({section:'practices', menu:'§ Practices', html:`
-  <div class="divider-slide" style="max-width:900px;margin:0 auto">
-    <div class="bignum reveal">02</div>
-    <div class="kicker reveal">section</div>
-    <h1 class="reveal">Practices</h1>
-    <p class="lead muted reveal">The small standards that keep the codebase consistent.</p>
-  </div>`});
-
-// ── 5 · LINTING ────────────────────────────────────────────────────────────
-SLIDES.push({section:'practices', menu:'Linting', html:`
+// ── HOW WE BUILD: CODE ─────────────────────────────────────────────────────
+SLIDES.push({section:'how we build', menu:'Linting', html:`
   <div style="max-width:1060px;margin:0 auto">
     <div class="kicker reveal">code quality</div>
     <h2 class="reveal">Always lint before you're done.</h2>
@@ -266,11 +227,7 @@ SLIDES.push({section:'practices', menu:'Linting', html:`
         </div>
       </div>
       <div>
-        <div class="card reveal">
-          <div class="tag">the rule</div>
-          <p>Lint every template when you wrap up. Not "before the PR" — <strong>before you stop working on it</strong>. Treat a lint error like a failing build.</p>
-        </div>
-        <div class="note reveal" style="margin-top:12px">
+        <div class="note reveal">
           <div class="label">heads up</div>
           Lint errors are enforced by the commit hook — so if you skip it, the next person's commit will fail on your code. Don't make it their problem.
         </div>
@@ -278,8 +235,7 @@ SLIDES.push({section:'practices', menu:'Linting', html:`
     </div>
   </div>`});
 
-// ── 6 · STATIC CLASSNAMES ──────────────────────────────────────────────────
-SLIDES.push({section:'practices', menu:'Static classnames', html:`
+SLIDES.push({section:'how we build', menu:'Static classnames', html:`
   <div style="max-width:1060px;margin:0 auto">
     <div class="kicker reveal">code style</div>
     <h2 class="reveal">Write static classnames.</h2>
@@ -309,10 +265,9 @@ SLIDES.push({section:'practices', menu:'Static classnames', html:`
     <p class="muted reveal" style="margin-top:22px;font-size:14px">Small things compound. A template with 40 layout files, each with 20 sloppy class strings, is a mess to review and maintain.</p>
   </div>`});
 
-// ── 7 · COMMIT MESSAGE SKILL ───────────────────────────────────────────────
-SLIDES.push({section:'practices', menu:'Claude commit messages', html:`
+SLIDES.push({section:'how we build', menu:'Claude commit messages', html:`
   <div style="max-width:1060px;margin:0 auto">
-    <div class="kicker reveal">tooling · from warlon</div>
+    <div class="kicker reveal">tooling</div>
     <h2 class="reveal">Let Claude write your commit messages.</h2>
     <p class="lead reveal">Warlon shared a Claude skill that generates clear, descriptive commit messages from your staged diff — so you stop writing <code class="lime">"fix"</code> and <code class="lime">"wip"</code>.</p>
     <div class="cols" style="margin-top:24px">
@@ -328,7 +283,7 @@ SLIDES.push({section:'practices', menu:'Claude commit messages', html:`
       <div>
         <div class="card reveal">
           <div class="tag">why bother</div>
-          <p>A good commit message is documentation. Future-you — or nightshift after you — will read <code>"fix logo variant on dark bg"</code> and understand instantly. <code>"fix"</code> tells nobody anything.</p>
+          <p>A good commit message is documentation. The other region will read <code>"fix logo variant on dark bg"</code> and understand instantly. <code>"fix"</code> tells nobody anything.</p>
         </div>
         <div class="card reveal" style="margin-top:12px">
           <div class="tag">the standard</div>
@@ -342,16 +297,178 @@ SLIDES.push({section:'practices', menu:'Claude commit messages', html:`
     </div>
   </div>`});
 
-// ── 8 · SECTION: TOOLS ─────────────────────────────────────────────────────
+// ── HOW WE BUILD: TEMPLATE CONVENTIONS ────────────────────────────────────
+SLIDES.push({section:'how we build', menu:'Layout naming conventions', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">conventions</div>
+    <h2 class="reveal">Layout naming conventions.</h2>
+    <p class="lead reveal">We stopped using ad industry shorthand for file names. No one should have to remember what <code class="lime">dmrec</code> or <code class="lime">mrec</code> means — the file name should just tell you.</p>
+    <div class="cols" style="margin-top:24px">
+      <div>
+        <div class="vs reveal" style="margin-top:0">
+          <div>
+            <div class="vs-label bad">before</div>
+            <div class="codebox"><pre style="margin:0;white-space:pre">src/layouts/
+├─ <span class="bad">Dmrec.tsx</span>
+├─ <span class="bad">Mrec.tsx</span>
+└─ <span class="bad">Skyscraper.tsx</span></pre></div>
+          </div>
+          <div>
+            <div class="vs-label good">after</div>
+            <div class="codebox"><pre style="margin:0;white-space:pre">src/layouts/
+├─ <span class="good">Layout300x600.tsx</span>
+├─ <span class="good">Layout300x250.tsx</span>
+└─ <span class="good">Layout160x600.tsx</span></pre></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="card reveal">
+          <div class="tag">why we made the switch</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>No more second-guessing — <code class="lime">mrec</code> is <em>what</em> exactly? The dimension says it all</li>
+            <li>New DEs shouldn't need to memorise a glossary of ad size nicknames just to read a file tree</li>
+            <li>Dimensions are universal — shorthand is team-specific tribal knowledge</li>
+          </ul>
+        </div>
+        <div class="note reveal">
+          <div class="label">the rule</div>
+          Name the file after what it renders, not what the industry calls it. <code class="lime">Layout300x250.tsx</code> is always unambiguous.
+        </div>
+      </div>
+    </div>
+  </div>`});
+
+SLIDES.push({section:'how we build', menu:'Layout instructions', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">conventions</div>
+    <h2 class="reveal">From brief to layouts — automated.</h2>
+    <p class="lead reveal">We use two instruction files that work together. APAC's <code class="lime">template.instructions.md</code> fetches the Linear card and generates the template. NAR's <code class="lime">screens.instructions.md</code> picks up from there and creates all the layout files.</p>
+    <div class="cols" style="margin-top:24px">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="card reveal">
+          <div class="tag">template.instructions.md · apac</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>Fetches all the Linear card details for the template</li>
+            <li>Generates the initial template scaffold from the brief</li>
+            <li>The starting point for any new template build</li>
+          </ul>
+        </div>
+        <div class="card reveal">
+          <div class="tag">screens.instructions.md · nar</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>We created this to take the scaffold further</li>
+            <li>Generates all the layout files the template requires</li>
+            <li>Works in conjunction with the template instructions — run it after</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="note reveal">
+          <div class="label">how it fits together</div>
+          <div style="font-size:14px;line-height:1.8;font-family:var(--mono);margin-top:4px">
+            <span style="color:var(--ui-500)">1.</span> <span style="color:var(--blue)">template.instructions.md</span><br>
+            &nbsp;&nbsp;&nbsp;<span style="color:var(--ui-500)">↳ reads Linear card, scaffolds template</span><br>
+            <span style="color:var(--ui-500)">2.</span> <span style="color:var(--lime-500)">screens.instructions.md</span><br>
+            &nbsp;&nbsp;&nbsp;<span style="color:var(--ui-500)">↳ generates all layout files</span><br>
+            <span style="color:var(--ui-500)">3.</span> <span style="color:var(--green)">build</span>
+          </div>
+        </div>
+        <div class="note reveal" style="margin-top:12px">
+          <div class="label">why this matters</div>
+          Less manual scaffolding means fewer structural inconsistencies across templates — and less time spent on the parts that should be automatic.
+        </div>
+        <div class="note reveal" style="margin-top:12px">
+          <div class="label">how to</div>
+          Full walkthrough on Notion: <a href="https://www.notion.so/sesimi/How-To-Generate-template-layout-files-and-config-files-using-Copilot-305c67bb7f568015ba22e75c40b88b67" target="_blank" style="color:var(--lime-500);font-family:var(--mono);font-size:13px">Generate template layout &amp; config files using Copilot →</a>
+        </div>
+      </div>
+    </div>
+  </div>`});
+
+SLIDES.push({section:'how we build', menu:'Shared Presets', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">architecture</div>
+    <h2 class="reveal">Shared Presets across templates.</h2>
+    <p class="lead reveal">Layout files define the default grid areas, columns, and rows for a given size. These are exported as a <code class="lime">Presets</code> object — so any template can reference a layout by name instead of duplicating it.</p>
+    <div class="cols" style="margin-top:24px">
+      <div>
+        <div class="codebox reveal" style="font-size:12.5px"><span class="dim" style="display:block;">// presets.ts</span>
+export const Presets = {
+  Layout490x75,
+  Layout670x224,
+  Layout1600x1200,
+  Layout1080x1350,
+  Layout1920x360,
+  Layout1920x600,
+  Layout650x200,
+  Layout1920x1080,
+  Layout350x100,
+  Layout1728x288,
+  Layout820x325,
+}
+
+<span class="dim" style="display:block;">// usage</span>
+<span class="good">Presets.Layout1920x1080</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="card reveal">
+          <div class="tag">what each layout defines</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>Default grid areas for that canvas size</li>
+            <li>Column and row structure</li>
+            <li>A single source of truth — no per-template duplication</li>
+          </ul>
+        </div>
+        <div class="note reveal">
+          <div class="label">why it matters</div>
+          One layout file, many templates. Update the grid in one place and every template that references it stays consistent.
+        </div>
+      </div>
+    </div>
+  </div>`});
+
+SLIDES.push({section:'how we build', menu:'Artifacts', html:`
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="kicker reveal">conventions</div>
+    <h2 class="reveal">Artifacts.</h2>
+    <p class="lead reveal">Anything you produce that might be useful to someone else later — screenshots, exported JSONs, approved creative references — should be attached to the Linear card.</p>
+    <div class="cols" style="margin-top:24px">
+      <div>
+        <div class="card reveal">
+          <div class="tag">what counts as an artifact</div>
+          <ul class="tick" style="margin-top:4px">
+            <li>Screenshots of the template at each size</li>
+            <li>The export URL from Nebula</li>
+            <li>The approved creative reference images</li>
+            <li>Exported datablock JSON for local testing</li>
+            <li>Storybook screenshots</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="card reveal">
+          <div class="tag">why attach them</div>
+          <p>If your work lives only in your local environment, it disappears when you stop. Artifacts on the card mean CS, AEs, and the other region all have context without asking you.</p>
+        </div>
+        <div class="note reveal" style="margin-top:12px">
+          <div class="label">the habit</div>
+          Before you move a card to "CS Review", check: has everything CS needs been attached? Export URL, screenshots, any known issues.
+        </div>
+      </div>
+    </div>
+  </div>`});
+
+// ── SECTION: TOOLS ─────────────────────────────────────────────────────────
 SLIDES.push({section:'tools', menu:'§ Tools', html:`
   <div class="divider-slide" style="max-width:900px;margin:0 auto">
-    <div class="bignum reveal">03</div>
+    <div class="bignum reveal">02</div>
     <div class="kicker reveal">section</div>
     <h1 class="reveal">Tools</h1>
     <p class="lead muted reveal">Things that'll make your day easier if you know how to use them.</p>
   </div>`});
 
-// ── 9 · DATABLOCK VALUES ───────────────────────────────────────────────────
 SLIDES.push({section:'tools', menu:'Testing datablock values', html:`
   <div style="max-width:1060px;margin:0 auto">
     <div class="kicker reveal">local dev</div>
@@ -377,7 +494,6 @@ SLIDES.push({section:'tools', menu:'Testing datablock values', html:`
     </div>
   </div>`});
 
-// ── 10 · STORYBOOK ─────────────────────────────────────────────────────────
 SLIDES.push({section:'tools', menu:'Storybook', html:`
   <div style="max-width:1060px;margin:0 auto">
     <div class="kicker reveal">development tool</div>
@@ -411,7 +527,6 @@ SLIDES.push({section:'tools', menu:'Storybook', html:`
     </div>
   </div>`});
 
-// ── 11 · GALAXY SNIPPETS ───────────────────────────────────────────────────
 SLIDES.push({section:'tools', menu:'Galaxy snippets', html:`
   <div style="max-width:1060px;margin:0 auto">
     <div class="kicker reveal">vs code extension · sesimi</div>
@@ -472,13 +587,12 @@ SLIDES.push({section:'tools', menu:'Galaxy snippets', html:`
     </div>
   </div>`});
 
-// ── 12 · SHEETS ────────────────────────────────────────────────────────────
 SLIDES.push({section:'tools', menu:'Sharper in Sheets', html:`
   <div style="max-width:1060px;margin:0 auto">
     <div class="kicker reveal">na team · datablocks</div>
     <h2 class="reveal">Sharper in Sheets — keeping data clean at the source.</h2>
     <p class="lead reveal">Now that datablocks connect directly to Sheets, the NA team is training to be well-versed in Sheets — because bad data input from AEs, ACs, or clients makes templates buggy. We fix that before it gets in.</p>
-    <div class="cols3" style="margin-top:24px">
+    <div class="cols" style="margin-top:24px">
       <div class="card reveal">
         <div class="tag">auto-increment order column</div>
         <h3>Order column</h3>
@@ -494,6 +608,11 @@ SLIDES.push({section:'tools', menu:'Sharper in Sheets', html:`
         <h3>Permission per column</h3>
         <p>Columns like <code class="lime">order</code> and <code class="lime">tags</code> are locked to design engineers only. AEs and clients can edit their data — not the structure the template depends on.</p>
       </div>
+      <div class="card reveal">
+        <div class="tag">google sheets tables</div>
+        <h3>Converting to Tables</h3>
+        <p>We're converting datablock sheets to native Google Sheets Tables — so filtering, sorting, and structured references are built in, not hacked together with formulas.</p>
+      </div>
     </div>
     <div class="note reveal" style="margin-top:16px;max-width:1100px">
       <div class="label">additional note</div>
@@ -501,17 +620,16 @@ SLIDES.push({section:'tools', menu:'Sharper in Sheets', html:`
     </div>
   </div>`});
 
-// ── 13 · SECTION: TRACKING ─────────────────────────────────────────────────
-SLIDES.push({section:'tracking', menu:'§ Tracking & visibility', html:`
+// ── SECTION: VISIBILITY ────────────────────────────────────────────────────
+SLIDES.push({section:'visibility', menu:'§ Visibility', html:`
   <div class="divider-slide" style="max-width:900px;margin:0 auto">
-    <div class="bignum reveal">04</div>
+    <div class="bignum reveal">03</div>
     <div class="kicker reveal">section</div>
-    <h1 class="reveal">Tracking &amp;<br>Visibility</h1>
-    <p class="lead muted reveal">How we know what's done, what's in flight, and what's overdue.</p>
+    <h1 class="reveal">Visibility</h1>
+    <p class="lead muted reveal">How we know what's done, what's in flight, and what's overdue — across both regions.</p>
   </div>`});
 
-// ── 14 · FEATURE TRACKER ───────────────────────────────────────────────────
-SLIDES.push({section:'tracking', menu:'Feature tracker', html:`
+SLIDES.push({section:'visibility', menu:'Feature tracker', html:`
   <div style="max-width:1060px;margin:0 auto">
     <div class="kicker reveal">slack · visibility</div>
     <h2 class="reveal">Feature / Bug card tracker.</h2>
@@ -540,248 +658,116 @@ SLIDES.push({section:'tracking', menu:'Feature tracker', html:`
     </div>
   </div>`});
 
-// ── 15 · ESTIMATES ─────────────────────────────────────────────────────────
-SLIDES.push({section:'tracking', menu:'Estimates', html:`
-  <div style="max-width:1060px;margin:0 auto">
+SLIDES.push({section:'visibility', menu:'Estimates — how to score', html:`
+  <div style="max-width:1100px;margin:0 auto">
     <div class="kicker reveal">planning</div>
-    <h2 class="reveal">Estimates.</h2>
-    <p class="lead reveal">Add time estimates to your Linear cards. They don't have to be perfect — they have to exist. A rough estimate is infinitely better than no estimate.</p>
-    <div class="cols" style="margin-top:24px">
-      <div>
-        <div class="card reveal">
-          <div class="tag">why</div>
-          <ul class="tick" style="margin-top:4px">
-            <li>Gives the team a sense of scope before picking up a card</li>
-            <li>Helps identify cards that are blocked or stalled</li>
-            <li>Feeds into sprint planning and capacity</li>
-          </ul>
+    <h2 class="reveal">Estimates — how to score.</h2>
+    <p class="lead reveal">Score the card across 5 dimensions (1–3 pts each), then map the total to a t-shirt size. Scores are a guide — use your judgment.</p>
+    <div class="cols reveal" style="margin-top:20px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="border:1px solid var(--ui-border);border-radius:var(--radius);overflow:hidden;font-size:13px">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;background:var(--ui-200);padding:6px 12px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ui-700);gap:8px">
+            <span>Dimension</span><span>1 pt</span><span>2 pts</span><span>3 pts</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;padding:7px 12px;gap:8px;border-top:1px solid var(--ui-border);background:var(--ui-100);align-items:start">
+            <span style="color:var(--ui-900);font-weight:500">Layout complexity</span>
+            <span style="color:var(--ui-700);font-size:12px">Single grid, linear</span>
+            <span style="color:var(--ui-700);font-size:12px">Multi-grid, some conditionals</span>
+            <span style="color:var(--ui-700);font-size:12px">Dynamic sections, nested groups, animated</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;padding:7px 12px;gap:8px;border-top:1px solid var(--ui-border);align-items:start">
+            <span style="color:var(--ui-900);font-weight:500">Editable fields</span>
+            <span style="color:var(--ui-700);font-size:12px">Text / number only</span>
+            <span style="color:var(--ui-700);font-size:12px">Mixed types, some dependencies</span>
+            <span style="color:var(--ui-700);font-size:12px">Complex schemas or validation logic</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;padding:7px 12px;gap:8px;border-top:1px solid var(--ui-border);background:var(--ui-100);align-items:start">
+            <span style="color:var(--ui-900);font-weight:500">Presets / sizes</span>
+            <span style="color:var(--ui-700);font-size:12px">1–3 presets</span>
+            <span style="color:var(--ui-700);font-size:12px">4–5 presets</span>
+            <span style="color:var(--ui-700);font-size:12px">6+ presets</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;padding:7px 12px;gap:8px;border-top:1px solid var(--ui-border);align-items:start">
+            <span style="color:var(--ui-900);font-weight:500">New code required</span>
+            <span style="color:var(--ui-700);font-size:12px">Copy-paste / minor tweaks</span>
+            <span style="color:var(--ui-700);font-size:12px">Some new code on existing template</span>
+            <span style="color:var(--ui-700);font-size:12px">Built from scratch or heavily customised</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;padding:7px 12px;gap:8px;border-top:1px solid var(--ui-border);background:var(--ui-100);align-items:start">
+            <span style="color:var(--ui-900);font-weight:500">Template type</span>
+            <span style="color:var(--ui-700);font-size:12px">Dashboard</span>
+            <span style="color:var(--ui-700);font-size:12px">Static · Email · Print · Video</span>
+            <span style="color:var(--ui-700);font-size:12px">Animated</span>
+          </div>
         </div>
       </div>
-      <div>
-        <div class="card reveal">
-          <div class="tag">how</div>
-          <p>Use story points or hours — whichever the team agrees on. Add the estimate when you start the card, update it if reality diverges. Log actual time if you can.</p>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="card">
+          <div class="tag">score → estimate</div>
+          <div style="display:grid;grid-template-columns:auto auto 1fr;gap:6px 14px;margin-top:8px;font-size:13px;font-family:var(--mono)">
+            <span style="color:var(--lime-500);font-weight:700">XS</span><span style="color:var(--ui-700)">4–5 pts</span><span style="color:var(--ui-900)">~1 day</span>
+            <span style="color:var(--lime-500);font-weight:700">S</span><span style="color:var(--ui-700)">6–7 pts</span><span style="color:var(--ui-900)">1–2 days</span>
+            <span style="color:var(--lime-500);font-weight:700">M</span><span style="color:var(--ui-700)">8–9 pts</span><span style="color:var(--ui-900)">2–3 days</span>
+            <span style="color:var(--lime-500);font-weight:700">L</span><span style="color:var(--ui-700)">10–11 pts</span><span style="color:var(--ui-900)">3–5 days</span>
+            <span style="color:var(--lime-500);font-weight:700">XL</span><span style="color:var(--ui-700)">12 pts</span><span style="color:var(--ui-900)">5+ days</span>
+          </div>
         </div>
-        <div class="note reveal" style="margin-top:12px">
-          <div class="label">remember</div>
-          An estimate you updated is honest. An estimate you never added is a gap in visibility for everyone.
+        <div class="note">
+          <div class="label">special rules</div>
+          <ul class="tick" style="margin-top:6px">
+            <li>Mostly reusing existing code? Cap at <strong class="lime">S</strong> regardless of score</li>
+            <li>Master templates are always <strong class="lime">L or XL</strong> — bump up if score falls below</li>
+            <li>Tag master cards with <code class="lime">"blocks N cards"</code> in Linear</li>
+            <li>Child cards reusing master code score max <strong class="lime">2 pts</strong> on new code dimension</li>
+          </ul>
         </div>
       </div>
     </div>
   </div>`});
 
-// ── 16 · COMPLETION RATE / LINEAR INSIGHTS ─────────────────────────────────
-/* HIDDEN – uncomment to restore
-SLIDES.push({section:'tracking', menu:'Completion rate & Linear Insights', html:`
-  <div style="max-width:1060px;margin:0 auto">
-    <div class="kicker reveal">visibility</div>
-    <h2 class="reveal">Tracking completion rate.</h2>
-    <p class="lead reveal">As templates get assigned to ACs and AEs — not just DEs — how do we track the overall completion rate? This is an open question worth discussing.</p>
-    <div class="cols" style="margin-top:24px">
-      <div>
-        <div class="card reveal">
-          <div class="tag">the challenge</div>
-          <p>If cards move to ACs and AEs, DE-owned metrics won't capture the full picture. We risk losing visibility into throughput, blockers, and team load.</p>
-        </div>
-        <div class="card reveal" style="margin-top:12px">
-          <div class="tag">one option: Linear Insights</div>
-          <p>Linear's Insights tab can show cycle time, lead time, and throughput across assignees. Worth exploring whether it gives us the cross-team view we need.</p>
-        </div>
-      </div>
-      <div>
-        <div class="card reveal">
-          <div class="tag">open questions</div>
-          <ul class="tick" style="margin-top:4px">
-            <li>What metric do we actually care about — cards done, layouts shipped, time-to-review?</li>
-            <li>Does Linear Insights cover multi-assignee cards?</li>
-            <li>Do we need a separate sheet, or can Linear do the job?</li>
-          </ul>
-        </div>
-        <div class="note reveal" style="margin-top:12px">
-          <div class="label">action</div>
-          Let's agree on the metric first, then find the tool — not the other way around.
-        </div>
-      </div>
-    </div>
-  </div>`});
-*/
-
-// ── 17 · SECTION: TEMPLATE CONVENTIONS ────────────────────────────────────
-SLIDES.push({section:'conventions', menu:'§ Template conventions', html:`
+// ── SECTION: TEAM ──────────────────────────────────────────────────────────
+SLIDES.push({section:'team', menu:'§ Team', html:`
   <div class="divider-slide" style="max-width:900px;margin:0 auto">
-    <div class="bignum reveal">05</div>
+    <div class="bignum reveal">04</div>
     <div class="kicker reveal">section</div>
-    <h1 class="reveal">Template<br>Conventions</h1>
-    <p class="lead muted reveal">Standards that keep templates readable across the whole team.</p>
+    <h1 class="reveal">Team</h1>
+    <p class="lead muted reveal">How we communicate, stay sharp, and grow together across NAR and APAC.</p>
   </div>`});
 
-// ── 18 · LAYOUT NAMING CONVENTIONS ────────────────────────────────────────
-SLIDES.push({section:'conventions', menu:'Layout naming conventions', html:`
+SLIDES.push({section:'team', menu:'NAR DE Catch Up', html:`
   <div style="max-width:1060px;margin:0 auto">
-    <div class="kicker reveal">conventions</div>
-    <h2 class="reveal">Layout naming conventions.</h2>
-    <p class="lead reveal">We stopped using ad industry shorthand for file names. No one should have to remember what <code class="lime">dmrec</code> or <code class="lime">mrec</code> means — the file name should just tell you.</p>
-    <div class="cols" style="margin-top:24px">
-      <div>
-        <div class="vs reveal" style="margin-top:0">
-          <div>
-            <div class="vs-label bad">before</div>
-            <div class="codebox"><pre style="margin:0;white-space:pre">src/layouts/
-├─ <span class="bad">Dmrec.tsx</span>
-├─ <span class="bad">Mrec.tsx</span>
-└─ <span class="bad">Skyscraper.tsx</span></pre></div>
-          </div>
-          <div>
-            <div class="vs-label good">after</div>
-            <div class="codebox"><pre style="margin:0;white-space:pre">src/layouts/
-├─ <span class="good">Layout300x600.tsx</span>
-├─ <span class="good">Layout300x250.tsx</span>
-└─ <span class="good">Layout160x600.tsx</span></pre></div>
-          </div>
-        </div>
-      </div>
+    <div class="kicker reveal">team · nar</div>
+    <h2 class="reveal">NAR Design Engineer Catch Up.</h2>
+    <p class="lead reveal">A low-pressure space to share wins, talk about what's coming up, and just be people — not just engineers. Remote work shouldn't mean distant.</p>
+    <div class="cols" style="margin-top:28px">
       <div style="display:flex;flex-direction:column;gap:12px">
         <div class="card reveal">
-          <div class="tag">why we made the switch</div>
-          <ul class="tick" style="margin-top:4px">
-            <li>No more second-guessing — <code class="lime">mrec</code> is <em>what</em> exactly? The dimension says it all</li>
-            <li>New DEs shouldn't need to memorise a glossary of ad size nicknames just to read a file tree</li>
-            <li>Dimensions are universal — shorthand is team-specific tribal knowledge</li>
-          </ul>
-        </div>
-        <div class="note reveal">
-          <div class="label">the rule</div>
-          Name the file after what it renders, not what the industry calls it. <code class="lime">Layout300x250.tsx</code> is always unambiguous.
-        </div>
-      </div>
-    </div>
-  </div>`});
-
-// ── 19 · LAYOUT INSTRUCTIONS ───────────────────────────────────────────────
-SLIDES.push({section:'conventions', menu:'Layout instructions', html:`
-  <div style="max-width:1060px;margin:0 auto">
-    <div class="kicker reveal">conventions</div>
-    <h2 class="reveal">From brief to layouts — automated.</h2>
-    <p class="lead reveal">We use two instruction files that work together. Dayshift's <code class="lime">template.instructions.md</code> fetches the Linear card and generates the template. Our <code class="lime">screens.instructions.md</code> picks up from there and creates all the layout files.</p>
-    <div class="cols" style="margin-top:24px">
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <div class="card reveal">
-          <div class="tag">template.instructions.md · dayshift</div>
-          <ul class="tick" style="margin-top:4px">
-            <li>Fetches all the Linear card details for the template</li>
-            <li>Generates the initial template scaffold from the brief</li>
-            <li>The starting point for any new template build</li>
-          </ul>
+          <div class="tag">personal wins</div>
+          <p>Something good happened outside of work? Share it. We want to know who we're actually working with — not just what they shipped.</p>
         </div>
         <div class="card reveal">
-          <div class="tag">screens.instructions.md · na team</div>
-          <ul class="tick" style="margin-top:4px">
-            <li>We created this to take the scaffold further</li>
-            <li>Generates all the layout files the template requires</li>
-            <li>Works in conjunction with the template instructions — run it after</li>
-          </ul>
+          <div class="tag">work wins</div>
+          <p>Shipped something you're proud of? Solved a problem that had been bugging you? This is the place to say it out loud.</p>
+        </div>
+        <div class="card reveal">
+          <div class="tag">what's coming up</div>
+          <p>Anything on your plate in the near future — work or otherwise. Helps us know where everyone's head is at.</p>
         </div>
       </div>
       <div>
         <div class="note reveal">
-          <div class="label">how it fits together</div>
-          <div style="font-size:14px;line-height:1.8;font-family:var(--mono);margin-top:4px">
-            <span style="color:var(--ui-500)">1.</span> <span style="color:var(--blue)">template.instructions.md</span><br>
-            &nbsp;&nbsp;&nbsp;<span style="color:var(--ui-500)">↳ reads Linear card, scaffolds template</span><br>
-            <span style="color:var(--ui-500)">2.</span> <span style="color:var(--lime-500)">screens.instructions.md</span><br>
-            &nbsp;&nbsp;&nbsp;<span style="color:var(--ui-500)">↳ generates all layout files</span><br>
-            <span style="color:var(--ui-500)">3.</span> <span style="color:var(--green)">build</span>
-          </div>
+          <div class="label">why this exists</div>
+          We all work remotely, which means the spontaneous hallway conversations don't happen naturally. This meeting is how we manufacture that closeness — a bit of the onsite feeling, distributed.
         </div>
         <div class="note reveal" style="margin-top:12px">
-          <div class="label">why this matters</div>
-          Less manual scaffolding means fewer structural inconsistencies across templates — and less time spent on the parts that should be automatic.
+          <div class="label">the vibe</div>
+          No agenda pressure. No deliverables. Just the team, talking. Non-work topics are not just allowed — they're the point.
         </div>
       </div>
     </div>
   </div>`});
 
-// ── 20 · DB PRESETS WITH SAME LAYOUTS ─────────────────────────────────────
-SLIDES.push({section:'conventions', menu:'DB presets with same layouts', html:`
-  <div style="max-width:1060px;margin:0 auto">
-    <div class="kicker reveal">architecture</div>
-    <h2 class="reveal">Presets sharing the same layout.</h2>
-    <p class="lead reveal">When two sizes have identical visual structure, they can share a layout file instead of duplicating it. Know when to use this pattern — and when not to.</p>
-    <div class="cols" style="margin-top:24px">
-      <div>
-        <div class="codebox reveal" style="font-size:12.5px"><span class="dim">// sizes.ts</span>
-export const sizes = isSquare
-  ? <span class="good">'layout1/Square'</span>
-  : isLandscape
-  ? <span class="good">'layout1/Landscape'</span>
-  : <span class="good">'layout1/Square'</span>;
-<span class="dim">// ↑ two presets, one layout file</span>
-        </div>
-      </div>
-      <div>
-        <div class="card reveal">
-          <div class="tag">when to share</div>
-          <ul class="tick" style="margin-top:4px">
-            <li>The two sizes have the same aspect ratio</li>
-            <li>The visual structure is identical — only pixel count differs</li>
-            <li>No layout-specific conditional logic is needed</li>
-          </ul>
-        </div>
-        <div class="card reveal" style="margin-top:12px">
-          <div class="tag">when not to share</div>
-          <ul class="tick" style="margin-top:4px">
-            <li class="bad">The approved creatives show different compositions</li>
-            <li class="bad">One size needs a field the other doesn't</li>
-            <li class="bad">You'd need conditionals to handle the differences</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>`});
-
-// ── 21 · ARTIFACTS ─────────────────────────────────────────────────────────
-SLIDES.push({section:'conventions', menu:'Artifacts', html:`
-  <div style="max-width:1060px;margin:0 auto">
-    <div class="kicker reveal">conventions</div>
-    <h2 class="reveal">Artifacts.</h2>
-    <p class="lead reveal">Anything you produce that might be useful to someone else later — screenshots, exported JSONs, approved creative references — should be attached to the Linear card.</p>
-    <div class="cols" style="margin-top:24px">
-      <div>
-        <div class="card reveal">
-          <div class="tag">what counts as an artifact</div>
-          <ul class="tick" style="margin-top:4px">
-            <li>Screenshots of the template at each size</li>
-            <li>The export URL from Nebula</li>
-            <li>The approved creative reference images</li>
-            <li>Exported datablock JSON for local testing</li>
-            <li>Storybook screenshots</li>
-          </ul>
-        </div>
-      </div>
-      <div>
-        <div class="card reveal">
-          <div class="tag">why attach them</div>
-          <p>If your work lives only in your local environment, it disappears when you stop. Artifacts on the card mean CS, AEs, and nightshift all have context without asking you.</p>
-        </div>
-        <div class="note reveal" style="margin-top:12px">
-          <div class="label">the habit</div>
-          Before you move a card to "CS Review", check: has everything CS needs been attached? Export URL, screenshots, any known issues.
-        </div>
-      </div>
-    </div>
-  </div>`});
-
-// ── 22 · SECTION: CULTURE ──────────────────────────────────────────────────
-SLIDES.push({section:'culture', menu:'§ Culture', html:`
-  <div class="divider-slide" style="max-width:900px;margin:0 auto">
-    <div class="bignum reveal">06</div>
-    <div class="kicker reveal">section</div>
-    <h1 class="reveal">Culture</h1>
-    <p class="lead muted reveal">The habits that separate a good team from a great one.</p>
-  </div>`});
-
-// ── 23 · RELEASE NOTES ────────────────────────────────────────────────────
-SLIDES.push({section:'culture', menu:'Read release notes', html:`
+SLIDES.push({section:'team', menu:'Read release notes', html:`
   <div style="max-width:1060px;margin:0 auto">
     <div class="kicker reveal">staying sharp</div>
     <h2 class="reveal">Read the release notes.</h2>
@@ -811,8 +797,7 @@ SLIDES.push({section:'culture', menu:'Read release notes', html:`
     </div>
   </div>`});
 
-// ── 24 · EAVESDROP ─────────────────────────────────────────────────────────
-SLIDES.push({section:'culture', menu:'Eavesdrop & subscribe', html:`
+SLIDES.push({section:'team', menu:'Eavesdrop & subscribe', html:`
   <div style="max-width:1060px;margin:0 auto">
     <div class="kicker reveal">curiosity</div>
     <h2 class="reveal">Eavesdrop. Join in.</h2>
@@ -845,15 +830,15 @@ SLIDES.push({section:'culture', menu:'Eavesdrop & subscribe', html:`
     </div>
   </div>`});
 
-// ── 25 · CLOSE ─────────────────────────────────────────────────────────────
+// ── CLOSE ──────────────────────────────────────────────────────────────────
 SLIDES.push({section:'close', menu:'Wrap up', html:`
   <div style="max-width:980px;margin:0 auto;text-align:center">
     <div style="font-size:56px;margin-bottom:10px">🤝</div>
     <div class="kicker reveal">that's everything</div>
     <h1 class="reveal">Ship good work,<br>leave good context.</h1>
     <p class="lead reveal" style="margin:18px auto 0;max-width:54ch">
-      The nightshift / dayshift model only works if each team leaves the codebase,
-      the cards, and the documentation in a state the other can pick up without a handover call.
+      Two regions, one standard. NAR and APAC move faster when we share what we know,
+      document what we build, and trust that the other team is holding the same bar.
     </p>
     <div class="row reveal" style="justify-content:center;margin-top:28px">
       <span class="pill lime">lint before wrapping up</span>
