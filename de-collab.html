@@ -431,32 +431,39 @@ export const Presets = {
 
 SLIDES.push({section:'how we build', menu:'Artifacts', html:`
   <div style="max-width:1060px;margin:0 auto">
-    <div class="kicker reveal">conventions</div>
-    <h2 class="reveal">Artifacts.</h2>
-    <p class="lead reveal">Anything you produce that might be useful to someone else later — screenshots, exported JSONs, approved creative references — should be attached to the Linear card.</p>
-    <div class="cols" style="margin-top:24px">
-      <div>
-        <div class="card reveal">
-          <div class="tag">what counts as an artifact</div>
-          <ul class="tick" style="margin-top:4px">
-            <li>Screenshots of the template at each size</li>
-            <li>The export URL from Nebula</li>
-            <li>The approved creative reference images</li>
-            <li>Exported datablock JSON for local testing</li>
-            <li>Storybook screenshots</li>
-          </ul>
-        </div>
+    <div class="kicker reveal">claude artifacts · lead tooling</div>
+    <h2 class="reveal">One dashboard instead of five apps.</h2>
+    <p class="lead reveal">As lead, I need to keep across projects, people, meetings, and messages — but that information is scattered across Linear, Slack, Google Calendar, and more. So I built a Claude artifact that pulls it all into one place.</p>
+    <div class="cols3" style="margin-top:24px">
+      <div class="card reveal">
+        <div class="tag">what it shows</div>
+        <ul class="tick" style="margin-top:4px">
+          <li>Today's meetings</li>
+          <li>My assigned Linear tasks</li>
+          <li>All active campaigns across NA &amp; TCI</li>
+          <li>Unassigned tasks</li>
+        </ul>
       </div>
-      <div>
-        <div class="card reveal">
-          <div class="tag">why attach them</div>
-          <p>If your work lives only in your local environment, it disappears when you stop. Artifacts on the card mean CS, AEs, and the other region all have context without asking you.</p>
-        </div>
-        <div class="note reveal" style="margin-top:12px">
-          <div class="label">the habit</div>
-          Before you move a card to "CS Review", check: has everything CS needs been attached? Export URL, screenshots, any known issues.
-        </div>
+      <div class="card reveal">
+        <div class="tag">team view</div>
+        <ul class="tick" style="margin-top:4px">
+          <li>Team availability — who's online, who's on leave</li>
+          <li>Each DE's active tasks at a glance</li>
+          <li>No need to check Slack or Linear individually</li>
+        </ul>
       </div>
+      <div class="card reveal">
+        <div class="tag">design qa throughput</div>
+        <ul class="tick" style="margin-top:4px">
+          <li>Tracks how many cards each DE has pushed through QA</li>
+          <li>Grouped by day so I can see where the workload is landing</li>
+          <li>Helps me spot if someone's overloaded or under-utilised</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note reveal" style="margin-top:16px;max-width:1180px">
+      <div class="label">the point</div>
+      We play around with Claude artifacts to help us day-to-day. This one is mine — but if there's a repetitive context-switching problem you have, an artifact might solve it too.
     </div>
   </div>`});
 
@@ -772,27 +779,15 @@ SLIDES.push({section:'team', menu:'Read release notes', html:`
     <div class="kicker reveal">staying sharp</div>
     <h2 class="reveal">Read the release notes.</h2>
     <p class="lead reveal">Every release ships new things — new config options, changed APIs, new components, deprecations. If you don't read them, you'll write code for a version that no longer exists.</p>
-    <div class="cols" style="margin-top:24px">
-      <div>
-        <div class="card reveal">
-          <div class="tag">what to look for</div>
-          <ul class="tick" style="margin-top:4px">
-            <li>New defineConfig fields or options</li>
-            <li>Changes to layout conventions</li>
-            <li>New template utilities or helpers</li>
-            <li>Deprecations — things that'll break next release</li>
-          </ul>
-        </div>
-      </div>
-      <div>
-        <div class="card reveal">
-          <div class="tag">the habit</div>
-          <p>When a new release lands, spend 5 minutes reading the notes. Not skimming — reading. If something changes how you'd write a template, share it in <code class="lime">#de</code>.</p>
-        </div>
-        <div class="note reveal" style="margin-top:12px">
-          <div class="label">practical tip</div>
-          Subscribe to the release channel so you get notified. Don't rely on someone else to surface it for you.
-        </div>
+    <div style="margin-top:24px;max-width:560px">
+      <div class="card reveal">
+        <div class="tag">what to look for</div>
+        <ul class="tick" style="margin-top:4px">
+          <li>New defineConfig fields or options</li>
+          <li>Changes to layout conventions</li>
+          <li>New template utilities or helpers</li>
+          <li>Deprecations — things that'll break next release</li>
+        </ul>
       </div>
     </div>
   </div>`});
@@ -840,12 +835,6 @@ SLIDES.push({section:'close', menu:'Wrap up', html:`
       Two regions, one standard. NAR and APAC move faster when we share what we know,
       document what we build, and trust that the other team is holding the same bar.
     </p>
-    <div class="row reveal" style="justify-content:center;margin-top:28px">
-      <span class="pill lime">lint before wrapping up</span>
-      <span class="pill lime">update the tracker</span>
-      <span class="pill lime">attach artifacts to cards</span>
-      <span class="pill lime">ask in #de</span>
-    </div>
     <p class="muted reveal" style="margin-top:28px;font-size:14px">Questions? Disagreements? Let's talk.</p>
   </div>`});
 
